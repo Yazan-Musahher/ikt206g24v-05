@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=my_db;Username=my_user;Password=my_password
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14  # Using PostgreSQL 14 as an example; adjust as needed
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=my_db
+      - POSTGRES_USER=my_user
+      - POSTGRES_PASSWORD=my_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
